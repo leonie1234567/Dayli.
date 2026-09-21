@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dayli — Cozy Planner</title>
+<style>
+:root{
+  --bg:#fbf8f5;--card:#fffdfb;--text:#403c3a;--muted:#8f8781;--line:#eee6e0;
+  --pink:#f5c9d8;--lav:#dcd1f2;--mint:#cce5d5;--blue:#c9dff0;--peach:#f7d3b9;
+  --butter:#f4e6a9;--sage:#cbd8c2;--lilac:#e7d8e9;--mocha:#d9c8b9;--aqua:#c9e6e1;
+  --shadow:0 10px 30px rgba(93,75,65,.08);
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit} button{border:0;cursor:pointer}
+.app{max-width:1200px;margin:auto;min-height:100vh;padding:28px 28px 100px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.brand{font-size:30px;font-weight:750;letter-spacing:-1px}.brand span{font-size:14px;color:var(--muted);font-weight:500;margin-left:8px}
+.icon{width:42px;height:42px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);font-size:18px}
+.tabs{display:flex;gap:8px;background:#f2ece8;padding:6px;border-radius:18px;width:max-content;margin-bottom:24px}
+.tab{padding:10px 18px;border-radius:13px;color:var(--muted);background:transparent}.tab.active{background:#fff;color:var(--text);box-shadow:0 4px 12px rgba(80,60,50,.07)}
+.page{display:none}.page.active{display:block}
+.hero{background:linear-gradient(135deg,#fff9f6,#f8f0f4);border:1px solid #f0e4df;border-radius:28px;padding:28px;box-shadow:var(--shadow);margin-bottom:18px}
+.hero h1{margin:4px 0 6px;font-size:31px;letter-spacing:-1px}.hero p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+.card h2{font-size:17px;margin:0 0 16px}.event{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}.event:last-child{border-bottom:0}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:6px}.event strong{font-size:15px}.event small{display:block;color:var(--muted);margin-top:3px}
+.goal{display:flex;align-items:center;gap:10px;padding:10px 0}.goal input{accent-color:#c9a7b7}.goal.done{text-decoration:line-through;color:#aaa}
+.progress{height:8px;background:#f0e9e5;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;width:50%;background:linear-gradient(90deg,var(--pink),var(--lav));border-radius:20px}
+.add{background:#403c3a;color:#fff;border-radius:14px;padding:10px 14px;float:right}.empty{color:var(--muted);font-size:14px;padding:15px 0}
+.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.month{font-size:21px;font-weight:700}.arrow{background:#fff;border:1px solid var(--line);border-radius:12px;padding:7px 11px}
+.week{display:grid;grid-template-columns:70px repeat(7,1fr);border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#fff}.cell{min-height:72px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;font-size:12px}.dayhead{min-height:62px;text-align:center;background:#fffaf7;font-weight:650}.time{color:#aaa;background:#fffdfb;text-align:right;padding-right:9px}.eventchip{border-radius:10px;padding:7px 8px;margin:2px 0;font-size:11px;line-height:1.25}.pink{background:var(--pink)}.lav{background:var(--lav)}.mint{background:var(--mint)}.blue{background:var(--blue)}.peach{background:var(--peach)}.butter{background:var(--butter)}.sage{background:var(--sage)}.aqua{background:var(--aqua)}
+.todo-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.todo-col{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px}.todo-item{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.todo-item:last-child{border:0}.todo-item.done{text-decoration:line-through;color:#aaa}
+.notes{min-height:420px;width:100%;border:0;outline:0;resize:vertical;background:transparent;color:var(--text);font-size:16px;line-height:1.7}
+.modal{position:fixed;inset:0;background:rgba(55,45,40,.28);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.show{display:flex}.modalbox{background:#fffdfa;border-radius:26px;padding:24px;width:min(460px,100%);box-shadow:0 30px 80px rgba(40,30,25,.2)}.modalbox h2{margin-top:0}.field{margin:12px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}.field input,.field textarea,.field select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff}.colors{display:flex;gap:8px}.color{width:30px;height:30px;border-radius:50%;border:3px solid transparent}.color.selected{border-color:#403c3a}.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.secondary{background:#f0e9e5;padding:10px 14px;border-radius:13px}.primary{background:#403c3a;color:#fff;padding:10px 14px;border-radius:13px}
+@media(max-width:800px){.app{padding:18px 14px 90px}.grid,.todo-columns{grid-template-columns:1fr}.week{font-size:10px;grid-template-columns:48px repeat(7,minmax(75px,1fr));overflow-x:auto}.week{width:100%;overflow-x:scroll}.cell{min-height:62px}.tabs{width:100%;overflow:auto}.tab{white-space:nowrap}.hero{padding:22px}.top{margin-bottom:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">dayli <span>your cozy planner ♡</span></div><button class="icon" onclick="openModal()">＋</button></div>
+  <div class="tabs">
+    <button class="tab active" data-page="today">Today</button>
+    <button class="tab" data-page="week">Week</button>
+    <button class="tab" data-page="todos">To-dos</button>
+    <button class="tab" data-page="notes">Notes</button>
+  </div>
+
+  <section id="today" class="page active">
+    <div class="hero"><div style="color:#a28f86;font-size:13px">MONDAY · SEPTEMBER 21</div><h1>Good morning ♡</h1><p>Let's make today a good one.</p></div>
+    <div class="grid">
+      <div class="card"><h2>Today <button class="add" onclick="openModal()">＋ Add</button></h2><div id="todayEvents"></div></div>
+      <div class="card"><h2>Today's goals ♡</h2><div id="goals"></div><div class="progress"><i id="progress"></i></div><div style="margin-top:10px;color:var(--muted);font-size:12px">Tip: goals are fully editable in this prototype.</div></div>
+      <div class="card"><h2>To-do preview</h2><div id="todoPreview"></div></div>
+      <div class="card"><h2>Little reminder</h2><p style="line-height:1.7;margin:0;color:#6f6762">You don't have to do everything today. ♡</p></div>
+    </div>
+  </section>
+
+  <section id="week" class="page">
+    <div class="calendar-head"><div class="month">September 2026</div><div><button class="arrow">‹</button> <button class="arrow">›</button></div></div>
+    <div class="week" id="weekGrid"></div>
+  </section>
+
+  <section id="todos" class="page">
+    <div class="hero"><div style="color:#a28f86;font-size:13px">YOUR TASKS</div><h1>Little steps ♡</h1><p>Check things off and let them leave your list.</p></div>
+    <div class="todo-columns">
+      <div class="todo-col"><h2>Today</h2><div id="todoToday"></div></div>
+      <div class="todo-col"><h2>This week</h2><div id="todoWeek"></div></div>
+      <div class="todo-col"><h2>Very important ♡</h2><div id="todoImportant"></div></div>
+    </div>
+  </section>
+
+  <section id="notes" class="page">
+    <div class="card"><h2>Notes ♡</h2><textarea id="notesArea" class="notes" placeholder="Write anything you want..."></textarea></div>
+  </section>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modalbox">
+    <h2>Add appointment ♡</h2>
+    <div class="field"><label>Title</label><input id="fTitle" placeholder="e.g. Coffee with Emma"></div>
+    <div class="field"><label>Date</label><input id="fDate" type="date" value="2026-09-21"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field"><label>Start</label><input id="fStart" type="time" value="09:00"></div>
+      <div class="field"><label>End</label><input id="fEnd" type="time" value="10:00"></div>
+    </div>
+    <div class="field"><label>Category</label><select id="fCat"><option>Work</option><option>Personal</option><option>Health</option><option>Study</option><option>Sport</option><option>Free time</option></select></div>
+    <div class="field"><label>Notes</label><textarea id="fNotes" rows="3" placeholder="Optional notes..."></textarea></div>
+    <div class="field"><label>Color</label><div class="colors" id="colors"></div></div>
+    <div class="actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveEvent()">Save appointment</button></div>
+  </div>
+</div>
+
+<script>
+const colors=[['pink','#f5c9d8'],['lav','#dcd1f2'],['mint','#cce5d5'],['blue','#c9dff0'],['peach','#f7d3b9'],['butter','#f4e6a9'],['sage','#cbd8c2'],['aqua','#c9e6e1'],['lilac','#e7d8e9'],['mocha','#d9c8b9']];
+let events=JSON.parse(localStorage.getItem('dayliEvents')||'null')||[
+ {title:'Work',date:'2026-09-21',start:'09:00',end:'12:00',cat:'Work',notes:'',color:'blue'},
+ {title:'Lunch with friends',date:'2026-09-21',start:'12:30',end:'13:30',cat:'Personal',notes:'',color:'peach'},
+ {title:'Study',date:'2026-09-21',start:'15:00',end:'16:30',cat:'Study',notes:'',color:'lav'},
+ {title:'Gym',date:'2026-09-21',start:'18:30',end:'19:30',cat:'Sport',notes:'',color:'mint'}
+];
+let todos=JSON.parse(localStorage.getItem('dayliTodos')||'null')||{
+ today:[['Reply to emails',false],['Buy groceries',false],['Finish presentation',false]],
+ week:[['Book dentist appointment',false],['Clean apartment',false],['Prepare presentation',false]],
+ important:[['Submit application',false],['Pay invoice',false]]
+};
+let goals=JSON.parse(localStorage.getItem('dayliGoals')||'null')||[['Drink enough water',true],['Go for a walk',true],['Read 20 pages',false],['Finish my project',false]];
+function persist(){localStorage.setItem('dayliEvents',JSON.stringify(events));localStorage.setItem('dayliTodos',JSON.stringify(todos));localStorage.setItem('dayliGoals',JSON.stringify(goals))}
+function render(){
+ const today=events.filter(e=>e.date==='2026-09-21').sort((a,b)=>a.start.localeCompare(b.start));
+ document.getElementById('todayEvents').innerHTML=today.map(e=>`<div class="event"><i class="dot" style="background:${colors.find(c=>c[0]===e.color)?.[1]||'#ddd'}"></i><div><strong>${e.title}</strong><small>${e.start} – ${e.end} · ${e.cat}</small>${e.notes?`<small>${e.notes}</small>`:''}</div></div>`).join('')||'<div class="empty">Nothing planned yet. A little breathing room ♡</div>';
+ const gdone=goals.filter(g=>g[1]).length;document.getElementById('progress').style.width=(gdone/goals.length*100)+'%';
+ document.getElementById('goals').innerHTML=goals.map((g,i)=>`<div class="goal ${g[1]?'done':''}"><input type="checkbox" ${g[1]?'checked':''} onchange="toggleGoal(${i})"><span>${g[0]}</span></div>`).join('');
+ document.getElementById('todoPreview').innerHTML=todos.today.map((t,i)=>`<div class="goal ${t[1]?'done':''}"><input type="checkbox" ${t[1]?'checked':''} onchange="toggleTodo('today',${i})"><span>${t[0]}</span></div>`).join('');
+ renderCol('todoToday','today');renderCol('todoWeek','week');renderCol('todoImportant','important');renderWeek();
+}
+function renderCol(id,key){document.getElementById(id).innerHTML=todos[key].map((t,i)=>`<div class="todo-item ${t[1]?'done':''}"><input type="checkbox" ${t[1]?'checked':''} onchange="toggleTodo('${key}',${i})"><span>${t[0]}</span></div>`).join('')}
+function renderWeek(){
+ const days=[['MON','21'],['TUE','22'],['WED','23'],['THU','24'],['FRI','25'],['SAT','26'],['SUN','27']];
+ const times=['05:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
+ let h='<div class="cell dayhead"></div>'+days.map(d=>`<div class="cell dayhead">${d[0]}<br><span style="font-size:16px">${d[1]}</span></div>`).join('');
+ times.forEach(t=>{h+=`<div class="cell time">${t}</div>`;days.forEach((d,di)=>{let date='2026-09-'+String(21+di).padStart(2,'0');let es=events.filter(e=>e.date===date && e.start===t);h+=`<div class="cell">${es.map(e=>`<div class="eventchip ${e.color}"><b>${e.title}</b><br>${e.start}–${e.end}</div>`).join('')}</div>`})});document.getElementById('weekGrid').innerHTML=h;
+}
+function toggleGoal(i){goals[i][1]=!goals[i][1];persist();render()}
+function toggleTodo(k,i){todos[k][i][1]=!todos[k][i][1];if(todos[k][i][1]) setTimeout(()=>{todos[k].splice(i,1);persist();render()},250);else{persist();render()}}
+function openModal(){document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function saveEvent(){let e={title:document.getElementById('fTitle').value.trim()||'Untitled',date:document.getElementById('fDate').value,start:document.getElementById('fStart').value,end:document.getElementById('fEnd').value,cat:document.getElementById('fCat').value,notes:document.getElementById('fNotes').value,color:window.selColor||'blue'};events.push(e);persist();closeModal();render()}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.page).classList.add('active')});
+const colorBox=document.getElementById('colors');colors.forEach((c,i)=>{let b=document.createElement('button');b.className='color '+(i===0?'selected':'');b.style.background=c[1];b.onclick=()=>{document.querySelectorAll('.color').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');window.selColor=c[0]};colorBox.appendChild(b)});window.selColor='pink';
+const notes=document.getElementById('notesArea');notes.value=localStorage.getItem('dayliNotes')||'';notes.addEventListener('input',()=>localStorage.setItem('dayliNotes',notes.value));
+render();
+</script>
+</body></html>
